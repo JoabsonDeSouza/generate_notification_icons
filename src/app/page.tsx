@@ -1,101 +1,89 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+import React, { useState, useRef } from 'react';
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+import { generateIcons } from '@/utils/generate';
+
+
+const App: React.FC = () => {
+  const [normalImage, setNormalImage] = useState<HTMLImageElement | null>(null);
+  const [smallImage, setSmallImage] = useState<HTMLImageElement | null>(null);
+  const [androidIconName, setAndroidIconName] = useState<string>('');
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  // Função para carregar a imagem normal
+  const handleNormalImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target?.result as string;
+        img.onload = () => {
+          setNormalImage(img);
+        };
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Função para carregar a imagem small
+  const handleSmallImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target?.result as string;
+        img.onload = () => {
+          setSmallImage(img);
+        };
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleGenerateIcons = () => {
+    generateIcons({
+      normalImage,
+      smallImage,
+      androidIconName,
+      canvasRef,
+      })
+  }
+
+
+  return <div className='w-[100vw] h-[100vh] flex justify-center items-center'>
+  <div className="flex flex-col w-full md:w-1/2 xl:w-2/5 2xl:w-2/5 3xl:w-1/3 mx-auto p-8 md:p-10 2xl:p-12 3xl:p-14 bg-[#ffffff] rounded-2xl shadow-xl">
+  <div className="flex flex-col gap-3 pb-4 items-center">
+       <h1 className="text-2xl font-bold text-[#4B5563] my-auto">Icon Notification Generator</h1>
+       <div className="text-sm font-light text-[#6B7280] pb-8 ">Gerar icone para notificação do Android</div>
+  </div>
+  
+  <form className="flex flex-col">
+      <div className="pb-2">
+          <label htmlFor="email" className="block mb-2 text-sm font-medium text-[#111827]">Carregar Imagem Normal</label>
+          <div className="relative text-gray-400">
+              <input className="mb-2 bg-gray-50 text-gray-600 border focus:border-transparent border-gray-300 sm:text-sm rounded-lg ring ring-transparent focus:ring-1 focus:outline-none focus:ring-gray-400 block w-full p-2.5 rounded-l-lg py-3 px-4" autoComplete="off" type="file" accept="image/*" onChange={handleNormalImageUpload} />
+          </div>
+      </div>
+      <div className="pb-2">
+          <label htmlFor="email" className="block mb-2 text-sm font-medium text-[#111827]">Carregar Imagem Small</label>
+          <div className="relative text-gray-400">
+              <input className="mb-2 bg-gray-50 text-gray-600 border focus:border-transparent border-gray-300 sm:text-sm rounded-lg ring ring-transparent focus:ring-1 focus:outline-none focus:ring-gray-400 block w-full p-2.5 rounded-l-lg py-3 px-4" autoComplete="off" type="file" accept="image/*" onChange={handleSmallImageUpload} />
+          </div>
+      </div>
+      <div className="pb-6">
+          <label htmlFor="password" className="block mb-2 text-sm font-medium text-[#111827]">Nome do Ícone</label>
+          <div className="relative text-gray-400">
+              <input className=" mb-2 bg-gray-50 text-gray-600 border focus:border-transparent border-gray-300 sm:text-sm rounded-lg ring ring-transparent focus:ring-1 focus:outline-none focus:ring-gray-400 block w-full p-2.5 rounded-l-lg py-3 px-4" autoComplete="new-password" type="text" value={androidIconName} onChange={(e) => setAndroidIconName(e.target.value)} />
+          </div>
+      </div>
+      <button type="submit" className="w-full text-[#FFFFFF] bg-[#4F46E5] focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-6" onClick={handleGenerateIcons}>Gerar Ícones</button>
+      <canvas ref={canvasRef} style={{ display: 'none' }} />
+  </form>
+</div>
+</div>
 }
+  
+export default App;
