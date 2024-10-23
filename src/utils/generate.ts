@@ -1,23 +1,28 @@
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import { Sizes, densities } from '@/utils';
+import { MutableRefObject } from 'react';
 
 const sizes: Sizes = {
   normal: 96,
   small: 64
 };
 
+interface IconData {
+  size: string;
+  filename: string;
+}
 
 export const generateIcons = async ({
-normalImage,
-smallImage,
-androidIconName,
-canvasRef,
-}: { 
-  normalImage: HTMLImageElement | null; 
-  smallImage: HTMLImageElement | null; 
-  canvasRef: any;
-  androidIconName: string
+  normalImage,
+  smallImage,
+  androidIconName,
+  canvasRef,
+}: {
+  normalImage: HTMLImageElement | null;
+  smallImage: HTMLImageElement | null;
+  canvasRef: MutableRefObject<HTMLCanvasElement | null>;
+  androidIconName: string;
 }) => {
   if (!normalImage || !smallImage || !canvasRef.current) return;
   const canvas = canvasRef.current;
@@ -28,7 +33,7 @@ canvasRef,
   const androidFolder = zip.folder('android');
 
   // Objeto para armazenar os ícones
-  const iconData: { [key: string]: { size: string; filename: string }[] } = {};
+  const iconData: { [key: string]: IconData[] } = {};
 
   // Gerar ícones Android (normal e small)
   for (const density in densities) {
@@ -63,7 +68,7 @@ canvasRef,
 
     // Armazenar dados do ícone small
     iconData[density].push({ size: `${smallWidth}x${smallHeight}`, filename: `${androidIconName}_small.png` });
-  }  
+  }
 
   // Gerar o arquivo zip e baixar
   zip.generateAsync({ type: 'blob' }).then((content) => {
