@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useRef, useState } from 'react';
 
 import { generateIcons } from '@/utils/generate';
 
@@ -8,7 +8,7 @@ import { generateIcons } from '@/utils/generate';
 const App: React.FC = () => {
   const [normalImage, setNormalImage] = useState<HTMLImageElement | null>(null);
   const [smallImage, setSmallImage] = useState<HTMLImageElement | null>(null);
-  const [androidIconName, setAndroidIconName] = useState<string>('');
+  const [androidIconName, setAndroidIconName] = useState<string>('icon_notification');
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   // Função para carregar a imagem normal
