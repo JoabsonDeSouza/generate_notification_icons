@@ -35,6 +35,19 @@ export const generateIcons = async ({
   // Objeto para armazenar os ícones
   const iconData: { [key: string]: IconData[] } = {};
 
+  const drawableScale = densities.xxxhdpi;
+  const drawableFolder = androidFolder?.folder('drawable');
+  const width = Math.round(sizes.normal * drawableScale);
+  const height = Math.round(sizes.normal * drawableScale);
+  canvas.width = width;
+  canvas.height = height;
+  ctx?.clearRect(0, 0, width, height);
+  ctx?.drawImage(normalImage, 0, 0, width, height);
+  const dataUrl = canvas.toDataURL('image/png');
+  const blob = await fetch(dataUrl).then((res) => res.blob());
+  drawableFolder?.file(`${androidIconName}.png`, blob);
+  drawableFolder?.file('icon.png', blob);
+  
   // Gerar ícones Android (normal e small)
   for (const density in densities) {
     const scale = densities[density];
