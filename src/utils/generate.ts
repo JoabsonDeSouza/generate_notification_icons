@@ -66,6 +66,22 @@ async function addDrawableIcon(
   const blob = await fetch(dataUrl).then((res) => res.blob());
   drawableFolder?.file(`${androidIconName}.png`, blob);
   drawableFolder?.file('icon.png', blob);
+  
+  // Adiciona o arquivo rn_edit_text_material.xml
+  const xmlContent = `<?xml version="1.0" encoding="utf-8"?>
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+       android:insetLeft="@dimen/abc_edit_text_inset_horizontal_material"
+       android:insetRight="@dimen/abc_edit_text_inset_horizontal_material"
+       android:insetTop="@dimen/abc_edit_text_inset_top_material"
+       android:insetBottom="@dimen/abc_edit_text_inset_bottom_material">
+
+    <selector>
+        <item android:state_enabled="false" android:drawable="@drawable/abc_textfield_default_mtrl_alpha"/>
+        <item android:drawable="@drawable/abc_textfield_activated_mtrl_alpha"/>
+    </selector>
+</inset>`;
+  
+  drawableFolder?.file('rn_edit_text_material.xml', xmlContent);
 }
 
 export const generateIcons = async ({
